@@ -24,6 +24,19 @@ func (c *Colormap) Reversed() *Colormap {
 	return &Colormap{colors}
 }
 
+func (c *Colormap) Quantize(levels int) *Colormap {
+	var colors []color.Color
+	for i := 0; i < levels; i++ {
+		t := float64(i) / float64(levels-1)
+		u := float64(i+1) / float64(levels)
+		color := c.At(t)
+		for len(colors) < int(u*256) {
+			colors = append(colors, color)
+		}
+	}
+	return &Colormap{colors}
+}
+
 func (c *Colormap) At(t float64) color.Color {
 	n := len(c.Colors)
 	if t <= 0 || math.IsNaN(t) {
